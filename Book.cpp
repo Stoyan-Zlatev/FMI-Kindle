@@ -11,53 +11,19 @@ Book::Book(const MyString& title, const MyString& authorName)
 {
 	setTitle(title);
 	setAuthorName(authorName);
-	//ratings = Collection<UserRating>();
-	//pages = Collection<Page>();
-	//comments = Collection<Comment>();
 }
 
-void Book::setTitle(const MyString& title)
+int Book::hasRated(const MyString& username)
 {
-	//if (title == "")
-	//{
-	//	throw std::invalid_argument("Title should not be empty!");
-	//}
-
-	this->title = title;
-}
-void Book::setAuthorName(const MyString& authorName)
-{
-	/*if (authorName == "")
+	for (size_t i = 0; i < ratings.count; i++)
 	{
-		throw std::invalid_argument("Author name should not be empty!");
-	}*/
+		if (ratings.collection[i].getUserName() == username)
+		{
+			return i;
+		}
+	}
 
-	this->authorName = authorName;
-}
-
-Book& Book::operator=(const Book& book)
-{
-	pages = book.pages;
-	comments = book.comments;
-	ratings = book.ratings;
-	title = book.title;
-	authorName = book.authorName;
-	return *this;
-}
-
-
-void Book::rate(const MyString& username, int rating)
-{
-	ratings.add(UserRating(username, rating));
-}
-
-const MyString Book::getTitle() const
-{
-	return title;
-}
-const MyString Book::getAuthorName() const
-{
-	return authorName;
+	return -1;
 }
 
 double Book::sumRating() const
@@ -65,58 +31,25 @@ double Book::sumRating() const
 	double sum = 0;
 	for (size_t i = 0; i < ratings.getCount(); i++)
 	{
-		sum += ratings.getElementByIndex(i).getRating();
+		sum += ratings.collection[i].getRating();
 	}
 
 	return sum;
 }
 
-
-double Book::getRating() const
+void Book::setTitle(const MyString& title)
 {
-	double ratingsSum = sumRating();
-	return ratingsSum / (double)ratings.getCount();
+	this->title = title;
 }
 
-void Book::printComments() const
+void Book::setAuthorName(const MyString& authorName)
 {
-	for (size_t i = 0; i < comments.getCount(); i++)
-	{
-		std::cout << comments.getElementByIndex(i).getContent() << std::endl;
-	}
-}
-
-void Book::printRatings() const
-{
-	for (size_t i = 0; i < ratings.getCount(); i++)
-	{
-		std::cout << ratings.collection[i].getUserName() << " rated " << ratings.collection[i].getRating() << " start!" << std::endl;
-	}
-}
-
-size_t Book::getPagesCount() const
-{
-	return pages.count;
-}
-
-void Book::addComment(const MyString& username, const MyString& comment)
-{
-	comments.add(Comment(username, comment));
-}
-
-void Book::addPage(const MyString& content, size_t pageNumber)
-{
-	pages.add(Page(content, pageNumber));
-}
-
-void Book::removeLastPage()
-{
-	pages.remove();
+	this->authorName = authorName;
 }
 
 void Book::readFromFile(std::fstream& file)
 {
-	//Title 
+	//Title load
 	size_t size;
 	file.read((char*)&size, sizeof(size_t));
 	char* data = new char[size + 1];
@@ -124,7 +57,7 @@ void Book::readFromFile(std::fstream& file)
 	data[size] = '\0';
 	title = MyString(data);
 
-	//Author 
+	//Author name load
 	file.read((char*)&size, sizeof(size_t));
 	delete[] data;
 	data = new char[size + 1];
@@ -134,21 +67,21 @@ void Book::readFromFile(std::fstream& file)
 
 	delete[] data;
 
-	//Pages 
+	//Pages load
 	file.read((char*)&pages.count, sizeof(size_t));
 	for (size_t i = 0; i < pages.count; i++)
 	{
 		pages.collection[i].readFromFile(file);
 	}
 
-	//Comments 
+	//Comments load
 	file.read((char*)&comments.count, sizeof(size_t));
 	for (size_t i = 0; i < comments.count; i++)
 	{
 		comments.collection[i].readFromFile(file);
 	}
 
-	//Ratings saved
+	//Ratings load
 	file.read((char*)&ratings.count, sizeof(size_t));
 	for (size_t i = 0; i < ratings.count; i++)
 	{
@@ -162,7 +95,7 @@ void Book::saveToFile(std::fstream& file)
 	size_t titleSize = title.getSize();
 	file.write((const char*)&titleSize, sizeof(size_t));
 	file.write((const char*)title.c_str(), title.getSize());
-	
+
 	//Author saved
 	size_t authorSize = authorName.getSize();
 	file.write((const char*)&authorSize, sizeof(size_t));
@@ -190,17 +123,100 @@ void Book::saveToFile(std::fstream& file)
 	}
 }
 
-void Book::printPageByIndex(int index) const
+void Book::addComment(const MyString& username, const MyString& comment)
 {
-	if (index < 0)
-	{
-		throw std::invalid_argument("This is the first page of the book!");
-
-	}
-	else if (index > (pages.getCount() - 1))
-	{
-		throw std::invalid_argument("This is the last page of the book!");
-	}
-	std::cout << pages.getElementByIndex(index).getPageContent()<<std::endl;
+	comments.add(Comment(username, comment));
 }
 
+void Book::addPage(const MyString& content, int pageNumber)
+{
+	pages.add(Page(content, pageNumber));
+}
+
+void Book::editRate(const MyString& username, int rating)
+{
+	int userRatingIndex = hasRated(username);
+	if (userRatingIndex == -1)
+	{
+		throw std::invalid_argument("You haven't rated this book yet!");
+	}
+
+	ratings.edit(UserRating(username, rating), userRatingIndex);
+}
+
+void Book::editPage(const MyString& content, int pageNumber)
+{
+	pages.edit(Page(content, pageNumber), pageNumber);
+}
+
+void Book::removeLastPage()
+{
+	pages.remove();
+}
+
+void Book::rate(const MyString& username, int rating)
+{
+	if (hasRated(username) >= 0)
+	{
+		throw std::invalid_argument("You have already rated this book!");
+	}
+
+	ratings.add(UserRating(username, rating));
+}
+
+void Book::printComments() const
+{
+	if (comments.getCount() == 0)
+	{
+		std::cout << "Comment section is empty!" << std::endl;
+	}
+	else
+	{
+		for (size_t i = 0; i < comments.getCount(); i++)
+		{
+			std::cout << comments.collection[i].getUserName() << " wrote: " << comments.collection[i].getContent() << std::endl;
+		}
+	}
+}
+
+void Book::printRatings() const
+{
+	if (ratings.getCount() == 0)
+	{
+		std::cout << "This book has no ratings yet!" << std::endl;
+	}
+	else
+	{
+		for (size_t i = 0; i < ratings.getCount(); i++)
+		{
+			std::cout << ratings.collection[i].getUserName() << " rated " <<
+						 ratings.collection[i].getRating() << " stars!" << std::endl;
+		}
+	}
+}
+
+void Book::printPageByIndex(int index) const
+{
+	std::cout << "Page " << index + 1 << ": " << pages.collection[index].getPageContent() << std::endl;
+}
+
+size_t Book::getPagesCount() const
+{
+	return pages.count;
+}
+
+double Book::getRating() const
+{
+	double ratingsSum = sumRating();
+	return ratingsSum / (double)ratings.getCount();
+}
+
+const MyString Book::getTitle() const
+{
+	return title;
+}
+
+const MyString Book::getAuthorName() const
+{
+	return authorName;
+}

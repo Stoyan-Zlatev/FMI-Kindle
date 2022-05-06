@@ -13,32 +13,12 @@ Page::Page(const MyString& pageContent, size_t pageNumber)
 
 void Page::setPageContent(const MyString& pageContent)
 {
-	/*if (pageContent == "")
-	{
-		throw std::invalid_argument("Page content should not be empty!");
-	}*/
-
 	this->content = pageContent;
 }
 
 void Page::setPageNumber(size_t pageNumber)
 {
-	/*if (pageNumber <= 0)
-	{
-		throw std::invalid_argument("Page number should be positive number!");
-	}*/
-
 	this->pageNumber = pageNumber;
-}
-
-size_t Page::getPageNumber() const
-{
-	return pageNumber;
-}
-
-const MyString Page::getPageContent() const
-{
-	return content;
 }
 
 void Page::saveToFile(std::fstream& file)
@@ -61,4 +41,14 @@ void Page::readFromFile(std::fstream& file)
 	data[contentSize] = '\0';
 	content = MyString(data);
 	delete[] data;
+}
+
+size_t Page::getPageNumber() const
+{
+	return pageNumber;
+}
+
+const MyString Page::getPageContent() const
+{
+	return content;
 }

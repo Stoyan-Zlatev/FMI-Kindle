@@ -13,6 +13,7 @@ public:
 	Page(const MyString& pageContent, size_t pageNumber);
 
 	void setPageContent(const MyString& pageContent);
+	
 	void saveToFile(std::fstream& file);
 	void readFromFile(std::fstream& file);
 

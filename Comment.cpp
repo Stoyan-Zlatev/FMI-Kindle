@@ -31,16 +31,6 @@ void Comment::setContent(const MyString content)
 	this->content = content;
 }
 
-const MyString Comment::getUserName() const
-{
-	return username;
-}
-
-const MyString Comment::getContent() const
-{
-	return content;
-}
-
 void Comment::saveToFile(std::fstream& file)
 {
 	size_t usernameSize = username.getSize();
@@ -69,4 +59,14 @@ void Comment::readFromFile(std::fstream& file)
 	content = MyString(data);
 
 	delete[] data;
+}
+
+const MyString Comment::getUserName() const
+{
+	return username;
+}
+
+const MyString Comment::getContent() const
+{
+	return content;
 }

@@ -9,6 +9,16 @@ UserRating::UserRating(const MyString& username, size_t rating)
 	setRating(rating);
 }
 
+void UserRating::setRating(size_t rating)
+{
+	if (rating < 0 || rating>5)
+	{
+		throw std::invalid_argument("Rating should be between 0 and 5!");
+	}
+
+	this->rating = rating;
+}
+
 void UserRating::saveToFile(std::fstream& file)
 {
 	size_t usernameSize = username.getSize();
@@ -30,16 +40,6 @@ void UserRating::readFromFile(std::fstream& file)
 	delete[] data;
 
 	file.read((char*)&rating, sizeof(size_t));
-}
-
-void UserRating::setRating(size_t rating)
-{
-	if (rating < 0 || rating>5)
-	{
-		throw std::invalid_argument("Rating should be between 0 and 5!");
-	}
-
-	this->rating = rating;
 }
 
 size_t UserRating::getRating() const

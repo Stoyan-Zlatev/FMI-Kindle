@@ -16,8 +16,8 @@ public:
 	Collection<T>& operator=(const Collection<T>& other);
 
 	void add(const T& element);
+	void edit(const T& element, int index);
 	void remove();
-	T& getElementByIndex(size_t index) const;
 
 	size_t getCount() const;
 	friend class Kindle;
@@ -104,6 +104,17 @@ void Collection<T>::add(const T& element)
 }
 
 template <typename T>
+void Collection<T>::edit(const T& element, int index)
+{
+	if (index<0 || index>count)
+	{
+		throw std::invalid_argument("This element does not exist!");
+	}
+
+	collection[index] = element;
+}
+
+template <typename T>
 void Collection<T>::remove()
 {
 	if (count == 0)
@@ -118,10 +129,4 @@ template <typename T>
 size_t Collection<T>::getCount() const
 {
 	return count;
-}
-
-template <typename T>
-T& Collection<T>::getElementByIndex(size_t index) const
-{
-	return collection[index];
 }

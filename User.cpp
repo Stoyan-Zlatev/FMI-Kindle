@@ -8,10 +8,28 @@ User::User() : User("", "") {}
 
 User::User(const MyString& name, const MyString& password)
 {
-	//readBooks = Collection<Book>();
-	//writtenBooks = Collection<Book>();
 	setName(name);
 	setPassword(password);
+}
+
+void User::setName(const MyString& name)
+{
+	if (name.getSize() > MaxNameLength)
+	{
+		return;
+	}
+
+	this->name = name;
+}
+
+void User::setPassword(const MyString& password)
+{
+	if (password.getSize() > MaxNameLength)
+	{
+		return;
+	}
+
+	this->password = password;
 }
 
 void User::saveToFile(std::fstream& file)
@@ -67,36 +85,10 @@ void User::readFromFile(std::fstream& file)
 	}
 }
 
-void User::setName(const MyString& name)
-{
-	if (name.getSize() > MaxNameLength)
-	{
-		return;
-	}
-
-	this->name = name;
-}
-
-void User::setPassword(const MyString& password)
-{
-	if (password.getSize() > MaxNameLength)
-	{
-		return;
-	}
-
-	this->password = password;
-}
-
 void User::readBook(const Book& book)
 {
 	readBooks.add(book);
 }
-
-void User::writeBook(const Book& book)
-{
-	writtenBooks.add(book);
-}
-
 
 void User::readBookPage(const Book& book, size_t pageCount) const
 {
@@ -108,9 +100,32 @@ void User::readBookComments(const Book& book) const
 	book.printComments();
 }
 
+void User::writeBook(const Book& book)
+{
+	writtenBooks.add(book);
+}
+
 void User::writeBookComment(Book& book, const MyString comment)
 {
 	book.addComment(name, comment);
+}
+
+void User::addRating(const MyString& bookTitle, int rating)
+{
+	size_t bookIndex = getWrittenBookIndex(bookTitle);
+	rateBook(writtenBooks.collection[bookIndex], rating);
+}
+
+void User::addComment(const MyString& bookTitle, const MyString& comment)
+{
+	size_t bookIndex = getWrittenBookIndex(bookTitle);
+	writeBookComment(writtenBooks.collection[bookIndex], comment);
+}
+
+void User::addPage(const MyString& bookTitle, const MyString& content, int page)
+{
+	size_t bookIndex = getWrittenBookIndex(bookTitle);
+	writtenBooks.collection[bookIndex].addPage(content, page);
 }
 
 void User::editWrittenBook(Book& book)
@@ -121,14 +136,14 @@ void User::editWrittenBook(Book& book)
 	}
 }
 
-void User::rateBook(Book& book, size_t rating)
-{
-	book.rate(name, rating);
-}
-
 void User::editBookRating(Book& book, size_t newRating)
 {
 	rateBook(book, newRating);
+}
+
+void User::rateBook(Book& book, int rating)
+{
+	book.rate(name, rating);
 }
 
 const MyString User::getName() const
@@ -141,11 +156,24 @@ const MyString User::getPassword() const
 	return password;
 }
 
-bool User::isUsersBook(const MyString& bookTitle) const
+int User::getWrittenBookIndex(const MyString& bookTitle) const
 {
 	for (size_t i = 0; i < writtenBooks.getCount(); i++)
 	{
-		if (writtenBooks.getElementByIndex(i).getTitle() == bookTitle)
+		if (writtenBooks.collection[i].getTitle() == bookTitle)
+		{
+			return i;
+		}
+	}
+
+	return -1;
+}
+
+bool User::hasUserRead(const MyString& bookTitle) const
+{
+	for (size_t i = 0; i < readBooks.getCount(); i++)
+	{
+		if (readBooks.collection[i].getTitle() == bookTitle)
 		{
 			return true;
 		}
@@ -154,15 +182,7 @@ bool User::isUsersBook(const MyString& bookTitle) const
 	return false;
 }
 
-bool User::hasUserRead(const MyString& bookTitle) const
+bool User::isUsersBook(const MyString& bookTitle) const
 {
-	for (size_t i = 0; i < readBooks.getCount(); i++)
-	{
-		if (readBooks.getElementByIndex(i).getTitle() == bookTitle)
-		{
-			return true;
-		}
-	}
-
-	return false;
+	return getWrittenBookIndex(bookTitle) >= 0;
 }

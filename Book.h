@@ -14,28 +14,34 @@ class Book
 	Collection<UserRating> ratings;
 	Collection<Page> pages;
 	Collection<Comment> comments;
+	
+	int hasRated(const MyString& username);
+	double sumRating() const;
 	void setTitle(const MyString& title);
 	void setAuthorName(const MyString& authorName);
-	double sumRating() const;
 public:
 	Book();
 	Book(const MyString& title, const MyString& authorName);
 
-	Book& operator=(const Book& book);
-
-	void rate(const MyString& username, int rating);
-	void addComment(const MyString& username, const MyString& comment);
-	void addPage(const MyString& content, size_t pageNumber);
-	void removeLastPage();
-	void saveToFile(std::fstream& file);
 	void readFromFile(std::fstream& file);
+	void saveToFile(std::fstream& file);
 
+	void addComment(const MyString& username, const MyString& comment);
+	void addPage(const MyString& content, int pageNumber);
 
-	const MyString getTitle() const;
-	const MyString getAuthorName() const;
-	double getRating() const;
+	void editPage(const MyString& content, int pageNumber);
+	void editRate(const MyString& username, int rating); 
+	
+	void rate(const MyString& username, int rating);
+	
+	void removeLastPage();
+
 	void printPageByIndex(int index) const;
 	void printComments() const;
 	void printRatings() const;
+	
 	size_t getPagesCount() const;
+	double getRating() const;
+	const MyString getTitle() const;
+	const MyString getAuthorName() const;
 };
