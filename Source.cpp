@@ -233,6 +233,7 @@ void main()
 			{
 				char title[MaxContentLength];
 				getCommandData(startIndex, command, title);
+				std::cout << "Enter page content: ";
 				std::cin.getline(command, MaxContentLength);
 				fmiKindle.addBookPage(title, command);
 			}
