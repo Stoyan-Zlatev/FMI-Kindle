@@ -113,10 +113,17 @@ void Kindle::view() const
 		throw std::invalid_argument("You do not have access!");
 	}
 
-	for (size_t i = 0; i < booksToRead.getCount(); i++)
+	if (booksToRead.getCount() == 0)
 	{
-		Book currentBook = booksToRead.collection[i];
-		std::cout << i + 1 << ". " << currentBook.getTitle() << " by " << currentBook.getAuthorName() << std::endl;
+		throw std::invalid_argument("The book list is empty!");
+	}
+	else
+	{
+		for (size_t i = 0; i < booksToRead.getCount(); i++)
+		{
+			Book currentBook = booksToRead.collection[i];
+			std::cout << i + 1 << ". " << currentBook.getTitle() << " by " << currentBook.getAuthorName() << std::endl;
+		}
 	}
 }
 
