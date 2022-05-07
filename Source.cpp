@@ -101,6 +101,8 @@ int parseStringToInt(const char* data)
 
 void main()
 {
+	//move constructors everywhere
+	//sizeof(variable)
 	std::fstream sourceFile("FMIKindle.dat", std::ios::in | std::ios::binary);
 
 	if (!sourceFile.is_open())
@@ -166,7 +168,7 @@ void main()
 				}
 
 				char readCommand = '\0';
-				while (readCommand != 'q')
+				while (true)
 				{
 					fmiKindle.printBookPage(title, currentPageNumber);
 					std::cin >> readCommand;
@@ -177,6 +179,14 @@ void main()
 					else if (readCommand == 'p')
 					{
 						currentPageNumber--;
+					}
+					else if (readCommand == 'q')
+					{
+						break;
+					}
+					else
+					{
+						throw std::invalid_argument("Invalid command!");
 					}
 				}
 			}
@@ -233,6 +243,7 @@ void main()
 			{
 				char title[MaxContentLength];
 				getCommandData(startIndex, command, title);
+				std::cout << "Enter page content: ";
 				std::cin.getline(command, MaxContentLength);
 				fmiKindle.addBookPage(title, command);
 			}

@@ -78,13 +78,13 @@ bool Kindle::exit()
 
 void Kindle::load(std::fstream& sourceFile)
 {
-	sourceFile.read((char*)&booksToRead.count, sizeof(size_t));
+	sourceFile.read((char*)&booksToRead.count, sizeof(booksToRead.count));
 	for (size_t i = 0; i < booksToRead.count; i++)
 	{
 		booksToRead.collection[i].readFromFile(sourceFile);
 	}
 
-	sourceFile.read((char*)&users.count, sizeof(size_t));
+	sourceFile.read((char*)&users.count, sizeof(users.count));
 	for (size_t i = 0; i < users.count; i++)
 	{
 		users.collection[i].readFromFile(sourceFile);
@@ -93,13 +93,13 @@ void Kindle::load(std::fstream& sourceFile)
 
 void Kindle::saveToFile(std::fstream& file)
 {
-	file.write((const char*)&booksToRead.count, sizeof(size_t));
+	file.write((const char*)&booksToRead.count, sizeof(booksToRead.count));
 	for (size_t i = 0; i < booksToRead.count; i++)
 	{
 		booksToRead.collection[i].saveToFile(file);
 	}
 
-	file.write((const char*)&users.count, sizeof(size_t));
+	file.write((const char*)&users.count, sizeof(users.count));
 	for (size_t i = 0; i < users.count; i++)
 	{
 		users.collection[i].saveToFile(file);
@@ -113,10 +113,17 @@ void Kindle::view() const
 		throw std::invalid_argument("You do not have access!");
 	}
 
-	for (size_t i = 0; i < booksToRead.getCount(); i++)
+	if (booksToRead.getCount() == 0)
 	{
-		Book currentBook = booksToRead.collection[i];
-		std::cout << i + 1 << ". " << currentBook.getTitle() << " by " << currentBook.getAuthorName() << std::endl;
+		throw std::invalid_argument("The book list is empty!");
+	}
+	else
+	{
+		for (size_t i = 0; i < booksToRead.getCount(); i++)
+		{
+			Book currentBook = booksToRead.collection[i];
+			std::cout << i + 1 << ". " << currentBook.getTitle() << " by " << currentBook.getAuthorName() << std::endl;
+		}
 	}
 }
 

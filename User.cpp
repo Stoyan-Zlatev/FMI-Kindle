@@ -34,21 +34,21 @@ void User::setPassword(const MyString& password)
 
 void User::saveToFile(std::fstream& file)
 {
-	size_t nameSize = name.getSize();
-	file.write((const char*)&nameSize, sizeof(size_t));
+	size_t size = name.getSize();
+	file.write((const char*)&size, sizeof(size));
 	file.write((const char*)name.c_str(), name.getSize());
 
-	size_t passwordSize = password.getSize();
-	file.write((const char*)&passwordSize, sizeof(size_t));
+	size = password.getSize();
+	file.write((const char*)&size, sizeof(size));
 	file.write((const char*)password.c_str(), password.getSize());
 
-	file.write((const char*)&readBooks.count, sizeof(size_t));
+	file.write((const char*)&readBooks.count, sizeof(readBooks.count));
 	for (size_t i = 0; i < readBooks.count; i++)
 	{
 		readBooks.collection[i].saveToFile(file);
 	}
 
-	file.write((const char*)&writtenBooks.count, sizeof(size_t));
+	file.write((const char*)&writtenBooks.count, sizeof(writtenBooks.count));
 	for (size_t i = 0; i < writtenBooks.count; i++)
 	{
 		writtenBooks.collection[i].saveToFile(file);
@@ -58,13 +58,13 @@ void User::saveToFile(std::fstream& file)
 void User::readFromFile(std::fstream& file)
 {
 	size_t size;
-	file.read((char*)&size, sizeof(size_t));
+	file.read((char*)&size, sizeof(size));
 	char* data = new char[size + 1];
 	file.read((char*)data, size);
 	data[size] = '\0';
 	name = MyString(data);
 
-	file.read((char*)&size, sizeof(size_t));
+	file.read((char*)&size, sizeof(size));
 	delete[] data;
 	data = new char[size + 1];
 	file.read((char*)data, size);
@@ -72,13 +72,13 @@ void User::readFromFile(std::fstream& file)
 	password = MyString(data);
 	delete[] data;
 
-	file.read((char*)&readBooks.count, sizeof(size_t));
+	file.read((char*)&readBooks.count, sizeof(readBooks.count));
 	for (size_t i = 0; i < readBooks.count; i++)
 	{
 		readBooks.collection[i].readFromFile(file);
 	}
 
-	file.read((char*)&writtenBooks.count, sizeof(size_t));
+	file.read((char*)&writtenBooks.count, sizeof(writtenBooks.count));
 	for (size_t i = 0; i < writtenBooks.count; i++)
 	{
 		writtenBooks.collection[i].readFromFile(file);
