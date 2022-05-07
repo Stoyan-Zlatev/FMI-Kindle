@@ -101,8 +101,6 @@ int parseStringToInt(const char* data)
 
 void main()
 {
-	//move constructors everywhere
-	//sizeof(variable)
 	std::fstream sourceFile("FMIKindle.dat", std::ios::in | std::ios::binary);
 
 	if (!sourceFile.is_open())
@@ -120,27 +118,35 @@ void main()
 	{
 		try
 		{
+			if (isPrefix(command, "exit") && fmiKindle.exit())
+			{
+				return;
+			}
+			
+			char content1[MaxContentLength];
+			char content2[MaxContentLength];
 			size_t startIndex = getCommandLength(command);
+			
 			if (isPrefix(command, "login"))
 			{
-				MyString username;
 				std::cout << "Enter username: ";
-				std::cin >> username;
-				MyString password;
+				std::cin.getline(content1, MaxContentLength);
+				
 				std::cout << "Enter password: ";
-				std::cin >> password;
-				fmiKindle.login(std::move(username), std::move(password));
+				std::cin.getline(content2, MaxContentLength);
+				
+				fmiKindle.login(std::move(content1), std::move(content2));
 				std::cout << "\tWelcome," << fmiKindle.getCurrentUserName() << std::endl;
 			}
 			else if (isPrefix(command, "signup"))
 			{
-				MyString username;
 				std::cout << "Enter username: ";
-				std::cin >> username;
-				MyString password;
+				std::cin.getline(content1, MaxContentLength);
+			
 				std::cout << "Enter password: ";
-				std::cin >> password;
-				fmiKindle.signup(std::move(username), std::move(password));
+				std::cin.getline(content2, MaxContentLength);
+				
+				fmiKindle.signup(std::move(content1), std::move(content2));
 				std::cout << "\tUser registered!" << std::endl;
 			}
 			else if (isPrefix(command, "logout"))
@@ -151,126 +157,110 @@ void main()
 			{
 				fmiKindle.view();
 			}
-			else if (isPrefix(command, "read"))
-			{
-				int currentPageNumber;
-				char title[MaxContentLength];
-				char data[MaxContentLength];
-				getCommandData(startIndex, command, title, data);
-				fmiKindle.readBook(title);
-				if (data[0] == '\0')
-				{
-					currentPageNumber = 0;
-				}
-				else
-				{
-					currentPageNumber = (parseStringToInt(data) - 1);
-				}
-
-				char readCommand = '\0';
-				while (true)
-				{
-					fmiKindle.printBookPage(title, currentPageNumber);
-					std::cin >> readCommand;
-					if (readCommand == 'n')
-					{
-						currentPageNumber++;
-					}
-					else if (readCommand == 'p')
-					{
-						currentPageNumber--;
-					}
-					else if (readCommand == 'q')
-					{
-						break;
-					}
-					else
-					{
-						throw std::invalid_argument("Invalid command!");
-					}
-				}
-			}
-			else if (isPrefix(command, "rates"))
-			{
-				char title[MaxContentLength];
-				getCommandData(startIndex, command, title);
-				fmiKindle.printBookRating(title);
-			}
-			else if (isPrefix(command, "rate"))
-			{
-				char title[MaxContentLength];
-				char data[MaxContentLength];
-				getCommandData(startIndex, command, title, data);
-				fmiKindle.rateBookByName(title, parseStringToInt(data));
-			}
 			else if (isPrefix(command, "write"))
 			{
 				std::cout << "Enter title: ";
-
-				char title[MaxContentLength];
-				std::cin.getline(title, MaxContentLength);
+				std::cin.getline(content1, MaxContentLength);
 
 				size_t pagesCount;
 				std::cout << "Pages count: ";
 				std::cin.getline(command, MaxContentLength);
 
-				pagesCount = parseStringToInt(command);
-				Book currentBook(title, fmiKindle.getCurrentUserName());
+				pagesCount = parseStringToInt(std::move(command));
+				Book currentBook(content1, fmiKindle.getCurrentUserName());
 
 				for (size_t i = 0; i < pagesCount; i++)
 				{
 					std::cout << "Page " << i + 1 << ": ";
 					std::cin.getline(command, MaxContentLength);
-					currentBook.addPage(command, i);
+					currentBook.addPage(std::move(command), i);
 				}
+				
 				fmiKindle.addBook(currentBook);
 			}
-			else if (isPrefix(command, "comments"))
-			{
-				char title[MaxContentLength];
-				getCommandData(startIndex, command, title);
-				fmiKindle.printBookComments(title);
-			}
-			else if (isPrefix(command, "comment"))
-			{
-				size_t startIndex = 8;
-				char title[MaxContentLength];
-				char data[MaxContentLength];
-				getCommandData(startIndex, command, title, data);
-				fmiKindle.addBookComment(title, data);
-			}
-			else if (isPrefix(command, "addPage"))
-			{
-				char title[MaxContentLength];
-				getCommandData(startIndex, command, title);
-				std::cout << "Enter page content: ";
-				std::cin.getline(command, MaxContentLength);
-				fmiKindle.addBookPage(title, command);
-			}
-			else if (isPrefix(command, "removePage"))
-			{
-				char title[MaxContentLength];
-				getCommandData(startIndex, command, title);
-				fmiKindle.removeBookLastPage(title);
-			}
-			else if (isPrefix(command, "editPage"))
-			{
-				char title[MaxContentLength];
-				char data[MaxContentLength];
-				getCommandData(startIndex, command, title, data);
-				std::cin.getline(command, MaxContentLength);
-				fmiKindle.editBookPage(title, (parseStringToInt(data) - 1), command);
-			}
-			else if (isPrefix(command, "editRate"))
-			{
-				char title[MaxContentLength];
-				char data[MaxContentLength];
-				getCommandData(startIndex, command, title, data);
-				fmiKindle.editBookRating(title, parseStringToInt(data));
-			}
-			else if (isPrefix(command, "exit") && fmiKindle.exit())
-			{
-				return;
+			else {
+				getCommandData(startIndex, command, content1);
+				
+				if (isPrefix(command, "addPage"))
+				{
+					std::cout << "Enter page content: ";
+					std::cin.getline(command, MaxContentLength);
+					
+					fmiKindle.addBookPage(std::move(content1), std::move(command));
+				}
+				else if (isPrefix(command, "removePage"))
+				{
+					fmiKindle.removeBookLastPage(std::move(content1));
+				}
+				else if (isPrefix(command, "rates"))
+				{
+					fmiKindle.printBookRating(std::move(content1));
+				}
+				else if (isPrefix(command, "comments"))
+				{
+					fmiKindle.printBookComments(std::move(content1));
+				}
+				else
+				{
+					getCommandData(startIndex, command, content1, content2);
+					
+					if (isPrefix(command, "read"))
+					{
+						int currentPageNumber;
+						fmiKindle.readBook(content1);
+					
+						if (content2[0] == '\0')
+						{
+							currentPageNumber = 0;
+						}
+						else
+						{
+							currentPageNumber = (parseStringToInt(std::move(content2)) - 1);
+						}
+
+						char readCommand = '\0';
+						while (true)
+						{
+							fmiKindle.printBookPage(content1, currentPageNumber);
+							std::cin >> readCommand;
+							
+							if (readCommand == 'n')
+							{
+								currentPageNumber++;
+							}
+							else if (readCommand == 'p')
+							{
+								currentPageNumber--;
+							}
+							else if (readCommand == 'q')
+							{
+								break;
+							}
+							else
+							{
+								throw std::invalid_argument("Invalid command!");
+							}
+						}
+					}
+					else if (isPrefix(command, "rate"))
+					{
+						fmiKindle.rateBookByName(std::move(content1), parseStringToInt(std::move(content2)));
+					}
+					else if (isPrefix(command, "comment"))
+					{
+						size_t startIndex = 8;
+						fmiKindle.addBookComment(std::move(content1), std::move(content2));
+					}
+					else if (isPrefix(command, "editPage"))
+					{
+						std::cin.getline(command, MaxContentLength);
+						fmiKindle.editBookPage(std::move(content1), (parseStringToInt(std::move(content2)) - 1), command);
+					}
+					else if (isPrefix(command, "editRate"))
+					{
+						fmiKindle.editBookRating(std::move(content1), parseStringToInt(std::move(content2)));
+					}
+				}
 			}
 		}
 		catch (std::invalid_argument& e)

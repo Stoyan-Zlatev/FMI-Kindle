@@ -51,14 +51,14 @@ void Book::readFromFile(std::fstream& file)
 {
 	//Title load
 	size_t size;
-	file.read((char*)&size, sizeof(size_t));
+	file.read((char*)&size, sizeof(size));
 	char* data = new char[size + 1];
 	file.read((char*)data, size);
 	data[size] = '\0';
 	title = MyString(data);
 
 	//Author name load
-	file.read((char*)&size, sizeof(size_t));
+	file.read((char*)&size, sizeof(size));
 	delete[] data;
 	data = new char[size + 1];
 	file.read((char*)data, size);
@@ -68,21 +68,21 @@ void Book::readFromFile(std::fstream& file)
 	delete[] data;
 
 	//Pages load
-	file.read((char*)&pages.count, sizeof(size_t));
+	file.read((char*)&pages.count, sizeof(pages.count));
 	for (size_t i = 0; i < pages.count; i++)
 	{
 		pages.collection[i].readFromFile(file);
 	}
 
 	//Comments load
-	file.read((char*)&comments.count, sizeof(size_t));
+	file.read((char*)&comments.count, sizeof(comments.count));
 	for (size_t i = 0; i < comments.count; i++)
 	{
 		comments.collection[i].readFromFile(file);
 	}
 
 	//Ratings load
-	file.read((char*)&ratings.count, sizeof(size_t));
+	file.read((char*)&ratings.count, sizeof(ratings.count));
 	for (size_t i = 0; i < ratings.count; i++)
 	{
 		ratings.collection[i].readFromFile(file);
@@ -92,31 +92,31 @@ void Book::readFromFile(std::fstream& file)
 void Book::saveToFile(std::fstream& file)
 {
 	//Title saved
-	size_t titleSize = title.getSize();
-	file.write((const char*)&titleSize, sizeof(size_t));
+	size_t size = title.getSize();
+	file.write((const char*)&size, sizeof(size));
 	file.write((const char*)title.c_str(), title.getSize());
 
 	//Author saved
-	size_t authorSize = authorName.getSize();
-	file.write((const char*)&authorSize, sizeof(size_t));
+	size = authorName.getSize();
+	file.write((const char*)&size, sizeof(size));
 	file.write((const char*)authorName.c_str(), authorName.getSize());
 
 	//Pages saved
-	file.write((const char*)&pages.count, sizeof(size_t));
+	file.write((const char*)&pages.count, sizeof(pages.count));
 	for (size_t i = 0; i < pages.count; i++)
 	{
 		pages.collection[i].saveToFile(file);
 	}
 
 	//Comments saved
-	file.write((const char*)&comments.count, sizeof(size_t));
+	file.write((const char*)&comments.count, sizeof(comments.count));
 	for (size_t i = 0; i < comments.count; i++)
 	{
 		comments.collection[i].saveToFile(file);
 	}
 
 	//Ratings saved
-	file.write((const char*)&ratings.count, sizeof(size_t));
+	file.write((const char*)&ratings.count, sizeof(ratings.count));
 	for (size_t i = 0; i < ratings.count; i++)
 	{
 		ratings.collection[i].saveToFile(file);
