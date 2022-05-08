@@ -99,6 +99,7 @@ MyString& MyString::operator+=(const MyString& other)
 	return *this;
 }
 
+
 MyString operator+(const MyString& lhs, const MyString& rhs)
 {
 	MyString copyOfLeft(lhs);
@@ -123,6 +124,17 @@ std::istream& operator>>(std::istream& stream, MyString& str)
 	strcpy(str.str, buff);
 
 	return stream;
+}
+
+void MyString::getline(std::istream& stream)
+{
+	delete[] str;
+	char buff[MaxContentLength];
+	stream.getline(buff,MaxContentLength);
+
+	size = strlen(buff);
+	str = new char[size + 1];
+	strcpy(str, buff);
 }
 
 bool operator==(const MyString& lhs, const MyString& rhs)
@@ -158,3 +170,28 @@ MyString& MyString::operator=(MyString&& otherString)
 	}
 	return *this;
 }
+
+char& MyString::operator[](int index) const
+{
+	if (size!=0 && (index < 0 || index >= size))
+	{
+		throw std::invalid_argument("Index out of range");
+	}
+
+	return str[index];
+}
+
+MyString MyString::substring(size_t startIndex, size_t endIndex) const
+{
+	char temp[MaxContentLength];
+	for (size_t i = startIndex; i < endIndex; i++)
+	{
+		temp[i-startIndex] = str[i];
+	}
+	
+	temp[endIndex - startIndex]='\0';
+	MyString substr = temp;
+	
+	return substr;
+}
+

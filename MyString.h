@@ -12,7 +12,7 @@ class MyString
 public:
 	MyString();
 	MyString(const char*);
-	MyString(size_t n);
+	explicit MyString(size_t n);
 
 	MyString(const MyString&);
 
@@ -20,6 +20,8 @@ public:
 
 	MyString& operator=(const MyString& other);
 	MyString& operator=(MyString&& other);
+	void getline(std::istream& stream);
+	char& operator[](int) const;
 
 	~MyString();
 
@@ -29,7 +31,7 @@ public:
 	const char* c_str() const;
 
 	MyString& operator+=(const MyString& other);
-	//MyString& substring(size_t startIndex, size_t endIndex);
+	MyString substring(size_t startIndex, size_t endIndex) const;
 
 	friend std::ostream& operator<<(std::ostream& stream, const MyString& str);
 	friend std::istream& operator>>(std::istream& stream, MyString& str);

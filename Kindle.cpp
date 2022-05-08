@@ -168,7 +168,7 @@ void Kindle::addBookComment(const MyString& bookTitle, const MyString& comment)
 void Kindle::addBookPage(const MyString& bookTitle, const MyString& pageContent)
 {
 	size_t bookIndex = getBookIndexByName(bookTitle);
-	
+
 	if (!currentUser.isUsersBook(bookTitle))
 	{
 		throw std::invalid_argument("You can edit only your books!");
@@ -180,7 +180,7 @@ void Kindle::addBookPage(const MyString& bookTitle, const MyString& pageContent)
 void Kindle::editBookPage(const MyString& bookTitle, int page, const MyString& pageContent)
 {
 	size_t bookIndex = getBookIndexByName(bookTitle);
-	
+
 	if (!currentUser.isUsersBook(bookTitle))
 	{
 		throw std::invalid_argument("You can edit only your books!");
@@ -204,7 +204,7 @@ void Kindle::editBookRating(const MyString& bookTitle, int rate)
 void Kindle::removeBookLastPage(const MyString& bookTitle)
 {
 	size_t bookIndex = getBookIndexByName(bookTitle);
-	
+
 	if (!currentUser.isUsersBook(bookTitle))
 	{
 		throw std::invalid_argument("You can edit only your books!");
@@ -228,6 +228,10 @@ void Kindle::printBookComments(const MyString& bookTitle) const
 void Kindle::printBookPage(const MyString& bookTitle, int pageNumber) const
 {
 	size_t bookIndex = getBookIndexByName(bookTitle);
+	if (booksToRead.collection[bookIndex].getPagesCount() == 0)
+	{
+		throw std::invalid_argument("This book is empty!");
+	}
 	if (pageNumber < 0 || pageNumber >= booksToRead.collection[bookIndex].getPagesCount())
 	{
 		throw std::invalid_argument("The page you try to access does not exist!");
