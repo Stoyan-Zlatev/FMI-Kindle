@@ -4,9 +4,9 @@
 bool isPrefix(const MyString& text, const MyString& prefix)
 {
 	int i = 0;
-	for (size_t i = 0; i < prefix.getSize() && i < text.getSize(); i++)
+	for (size_t i = 0; i < prefix.getSize(); i++)
 	{
-		if (text[i] == '\0' || text[i] != prefix[i])
+		if (i >= text.getSize() || text[i] != prefix[i])
 			return false;
 	}
 

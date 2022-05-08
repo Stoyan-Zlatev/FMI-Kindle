@@ -29,9 +29,18 @@ void main()
 	{
 		try
 		{
-			if (isPrefix(command, "exit") && fmiKindle.exit())
+			if (isPrefix(command, "exit"))
 			{
-				return;
+				if (fmiKindle.exit())
+				{
+					return;
+				}
+				else
+				{
+					std::cout << ">";
+					command.getline(std::cin);
+					continue;
+				}
 			}
 			size_t startIndex = getCommandLength(command);
 
@@ -163,7 +172,6 @@ void main()
 				else
 				{
 					getField2Data(startIndex, command, field1, field2);
-
 
 					if (isPrefix(command, "rate"))
 					{

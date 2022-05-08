@@ -192,6 +192,7 @@ void Book::printRatings() const
 			std::cout << ratings.collection[i].getUserName() << " rated " <<
 						 ratings.collection[i].getRating() << " stars!" << std::endl;
 		}
+		std::cout << "Average rate: " << getRating() << std::endl;
 	}
 }
 

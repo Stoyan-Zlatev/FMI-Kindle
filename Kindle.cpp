@@ -239,7 +239,15 @@ void Kindle::printBookRating(const MyString& bookTitle) const
 
 bool Kindle::containsUser(const MyString& username) const
 {
-	return getUserIndexByName(username)>=0;
+	for (size_t i = 0; i < users.getCount(); i++)
+	{
+		if (username == users.collection[i].getName())
+		{
+			return true;
+		}
+	}
+
+	return false;
 }
 
 bool Kindle::containsBook(const MyString& bookTitle) const
