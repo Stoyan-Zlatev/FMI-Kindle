@@ -112,8 +112,8 @@ void Kindle::view() const
 	{
 		for (size_t i = 0; i < booksToRead.getCount(); i++)
 		{
-			Book currentBook = booksToRead.collection[i];
-			std::cout << i + 1 << ". " << currentBook.getTitle() << " by " << currentBook.getAuthorName() << std::endl;
+			std::cout << i + 1 << ". " << booksToRead.collection[i].getTitle() <<
+								  " by " << booksToRead.collection[i].getAuthorName() << std::endl;
 		}
 	}
 }
@@ -141,7 +141,7 @@ void Kindle::rateBookByName(const MyString& bookTitle, int rating)
 void Kindle::addBook(const Book& book)
 {
 	booksToRead.add(book);
-	currentUser.writeBook(book);
+	currentUser.writeBook(book.getTitle());
 }
 
 void Kindle::addBookComment(const MyString& bookTitle, const MyString& comment)
@@ -207,7 +207,7 @@ void Kindle::removeBookLastPage(const MyString& bookTitle)
 void Kindle::readBook(const MyString& bookTitle)
 {
 	size_t bookIndex = getBookIndexByName(bookTitle);
-	currentUser.readBook(booksToRead.collection[bookIndex]);
+	currentUser.readBook(booksToRead.collection[bookIndex].getTitle());
 }
 
 void Kindle::printBookComments(const MyString& bookTitle) const

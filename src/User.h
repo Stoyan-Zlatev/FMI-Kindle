@@ -9,8 +9,8 @@ class User
 {
 	MyString name;
 	MyString password;
-	Collection<Book> readBooks;
-	Collection<Book> writtenBooks;
+	Collection<MyString> readBooks;
+	Collection<MyString> writtenBooks;
 	
 	void setName(const MyString& name);
 	void setPassword(const MyString& password);
@@ -21,27 +21,14 @@ public:
 	void saveToFile(std::fstream& file);
 	void readFromFile(std::fstream& file);
 
-	void readBook(const Book& book);
-	void readBookPage(const Book& book, size_t pageCount) const;
-	void readBookComments(const Book& book) const;
+	void readBook(const MyString& title);
+	void writeBook(const MyString& title);
 	
-	void writeBook(const Book& book);
-	void writeBookComment(Book& book, const MyString comment);
-	
-	void addRating(const MyString& bookTitle, int rating);
-	void addPage(const MyString& bookTitle, const MyString& content, int page);
-	void addComment(const MyString& bookTitle, const MyString& comment);
-
-	void editWrittenBook(Book& book);
-	void editBookRating(Book& book, size_t newRating);
-
-	void rateBook(Book& book, int rating);
-	
-	bool isUsersBook(const MyString& bookTitle) const;
-	bool hasUserRead(const MyString& bookTitle) const;
+	bool isUsersBook(const MyString& title) const;
+	bool hasUserRead(const MyString& title) const;
 	
 	
-	int getWrittenBookIndex(const MyString& bookTitle) const;
+	int getWrittenBookIndex(const MyString& title) const;
 	const MyString getName() const;
 	const MyString getPassword() const;
 };
