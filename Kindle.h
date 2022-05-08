@@ -12,9 +12,9 @@ class Kindle
 
 	bool containsUser(const MyString& username, const MyString& password) const;
 	bool containsUser(const MyString& username) const;
-	
-	size_t getBookIndexByName(const MyString& name) const;
-	size_t getUserIndexByName(const MyString& name) const;
+
+	int getBookIndexByName(const MyString& name) const;
+	int getUserIndexByName(const MyString& name) const;
 public:
 	Kindle();
 	
@@ -22,7 +22,7 @@ public:
 	void signup(const MyString& userName, const MyString& password);
 	void logout(std::fstream& file);
 	bool exit();
-	
+
 	void load(std::fstream& sourceFile);
 	void saveToFile(std::fstream& file);
 	
@@ -44,6 +44,9 @@ public:
 	
 	void editBookPage(const MyString& bookTitle, int page, const MyString& pageContent);
 	void editBookRating(const MyString& bookTitle, int rate);
+	
+	bool containsBook(const MyString& bookTitle) const;
 
 	const MyString getCurrentUserName() const;
+	bool getIsUsed() const;
 };

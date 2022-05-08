@@ -37,6 +37,11 @@ void main()
 
 			if (isPrefix(command, "login"))
 			{
+				if (fmiKindle.getIsUsed())
+				{
+					throw std::invalid_argument("There is already logged user!");
+				}
+
 				std::cout << "Enter username: ";
 				field1.getline(std::cin);
 
@@ -48,6 +53,11 @@ void main()
 			}
 			else if (isPrefix(command, "signup"))
 			{
+				if (fmiKindle.getIsUsed())
+				{
+					throw std::invalid_argument("There is currently logged user!");
+				}
+
 				std::cout << "Enter username: ";
 				field1.getline(std::cin);
 
@@ -69,6 +79,11 @@ void main()
 			{
 				std::cout << "Enter title: ";
 				field1.getline(std::cin);
+
+				if (fmiKindle.containsBook(field1))
+				{
+					throw std::invalid_argument("Book with this name already exists!");
+				}
 
 				size_t pagesCount;
 				std::cout << "Pages count: ";
@@ -122,21 +137,20 @@ void main()
 						currentPageNumber = (parseStringToInt(std::move(field2)) - 1);
 					}
 
-					MyString readCommand;
 					while (true)
 					{
 						fmiKindle.printBookPage(field1, currentPageNumber);
-						readCommand.getline(std::cin);
+						command.getline(std::cin);
 
-						if (readCommand[0] == 'n')
+						if (command[0] == 'n')
 						{
 							currentPageNumber++;
 						}
-						else if (readCommand[0] == 'p')
+						else if (command[0] == 'p')
 						{
 							currentPageNumber--;
 						}
-						else if (readCommand[0] == 'q')
+						else if (command[0] == 'q')
 						{
 							break;
 						}
@@ -162,6 +176,7 @@ void main()
 					}
 					else if (isPrefix(command, "editPage"))
 					{
+						std::cout << "Enter the new page content:";
 						command.getline(std::cin);
 						fmiKindle.editBookPage(std::move(field1), (parseStringToInt(std::move(field2)) - 1), command);
 					}

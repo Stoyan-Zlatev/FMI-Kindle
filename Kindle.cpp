@@ -11,11 +11,6 @@ Kindle::Kindle()
 
 void Kindle::login(const MyString& username, const MyString& password)
 {
-	if (isUsed)
-	{
-		throw std::invalid_argument("There is already logged user!");
-	}
-
 	if (!containsUser(username, password))
 	{
 		throw std::invalid_argument("User with this username and password does not exist!");
@@ -28,11 +23,7 @@ void Kindle::login(const MyString& username, const MyString& password)
 
 void Kindle::signup(const MyString& username, const MyString& password)
 {
-	if (isUsed)
-	{
-		throw std::invalid_argument("There is already logged user!");
-	}
-	else if (containsUser(username))
+	if (containsUser(username))
 	{
 		throw std::invalid_argument("User with this username already exists!");
 	}
@@ -232,7 +223,7 @@ void Kindle::printBookPage(const MyString& bookTitle, int pageNumber) const
 	{
 		throw std::invalid_argument("This book is empty!");
 	}
-	if (pageNumber < 0 || pageNumber >= booksToRead.collection[bookIndex].getPagesCount())
+	else if (pageNumber < 0 || pageNumber >= booksToRead.collection[bookIndex].getPagesCount())
 	{
 		throw std::invalid_argument("The page you try to access does not exist!");
 	}
@@ -248,15 +239,25 @@ void Kindle::printBookRating(const MyString& bookTitle) const
 
 bool Kindle::containsUser(const MyString& username) const
 {
-	for (size_t i = 0; i < users.getCount(); i++)
+	return getUserIndexByName(username)>=0;
+}
+
+bool Kindle::containsBook(const MyString& bookTitle) const
+{
+	for (size_t i = 0; i < booksToRead.count; i++)
 	{
-		if (username == users.collection[i].getName())
+		if (bookTitle == booksToRead.collection[i].getTitle())
 		{
 			return true;
 		}
 	}
 
 	return false;
+}
+
+bool Kindle::getIsUsed() const
+{
+	return isUsed;
 }
 
 bool Kindle::containsUser(const MyString& username, const MyString& password) const
@@ -277,7 +278,7 @@ const MyString Kindle::getCurrentUserName() const
 	return currentUser.getName();
 }
 
-size_t Kindle::getUserIndexByName(const MyString& name) const
+int Kindle::getUserIndexByName(const MyString& name) const
 {
 	for (size_t i = 0; i < users.count; i++)
 	{
@@ -287,10 +288,10 @@ size_t Kindle::getUserIndexByName(const MyString& name) const
 		}
 	}
 
-	throw std::invalid_argument("User with this name does not exist!");
+	throw std::invalid_argument("This user does not exist!");
 }
 
-size_t Kindle::getBookIndexByName(const MyString& name) const
+int Kindle::getBookIndexByName(const MyString& name) const
 {
 	for (size_t i = 0; i < booksToRead.count; i++)
 	{
@@ -300,5 +301,5 @@ size_t Kindle::getBookIndexByName(const MyString& name) const
 		}
 	}
 
-	throw std::invalid_argument("Book with this name does not exist!");
+	throw std::invalid_argument("This book does not exist!");
 }
