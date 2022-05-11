@@ -15,7 +15,7 @@
 - `read` `<book title>`:  You can read a book from the available "books to read".
 - `read` `<book title>` `<page>`: You can read a book starting from `<page>`.
 - `rate` `<book title>` `<rating>`: You can rate a book you have already read.
-- `comment` `<book title>` `<comment>`: You can comment a book you have already read.
-- `editPage` `<book title>` `<page>`: You can edit page of your book.
+- `comment` `<book title>` `<comment>`: You can comment on a book you have already read.
+- `editPage` `<book title>` `<page>`: You can edit a page of your book.
 - `editRage` `<book title>` `<rating>`: You can edit your rating of a book.
 - `exit`: exit the program.
