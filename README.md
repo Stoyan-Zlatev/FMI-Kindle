@@ -8,6 +8,7 @@
 - `signup`: You can sign up if you have not registered yet.
 - `logout`: If you are currently logged in, you can log out at any time.
 - `write`: You can write a book and add it to the available "books to read".
+- `view`: Shows all available "books to read".
 - `addPage` `<book title>`:  You can add one more page to a book you have written.
 - `removePage` `<book title>`: You can remove the last page of a book you have written.
 - `rates` `<book title>`: You can see ratings of the book as well as the average rating for the book.
