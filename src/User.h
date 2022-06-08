@@ -11,7 +11,7 @@ class User
 	MyString password;
 	Collection<MyString> readBooks;
 	Collection<MyString> writtenBooks;
-	
+
 	void setName(const MyString& name);
 	void setPassword(const MyString& password);
 public:
@@ -23,12 +23,12 @@ public:
 
 	void readBook(const MyString& title);
 	void writeBook(const MyString& title);
-	
+
 	bool isUsersBook(const MyString& title) const;
 	bool hasUserRead(const MyString& title) const;
-	
-	
+
+
 	int getWrittenBookIndex(const MyString& title) const;
 	const MyString getName() const;
-	const MyString getPassword() const;
+	bool isPasswordCorrect(const MyString& customerPassword) const;
 };

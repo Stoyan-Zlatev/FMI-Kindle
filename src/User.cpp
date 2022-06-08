@@ -114,9 +114,9 @@ const MyString User::getName() const
 	return name;
 }
 
-const MyString User::getPassword() const
+bool User::isPasswordCorrect(const MyString& customerPassword) const
 {
-	return password;
+	return password == customerPassword;
 }
 
 int User::getWrittenBookIndex(const MyString& title) const
