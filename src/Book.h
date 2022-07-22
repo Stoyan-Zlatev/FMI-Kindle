@@ -23,11 +23,11 @@ public:
 	Book();
 	Book(const MyString& title, const MyString& authorName);
 
-	void readFromFile(std::fstream& file);
-	void saveToFile(std::fstream& file);
+	void readFromFile(std::ifstream& file);
+	void saveToFile(std::ofstream& file) const;
 
 	void addComment(const MyString& username, const MyString& comment);
-	void addPage(const MyString& content, int pageNumber);
+	void addPage(const MyString& content);
 
 	void editPage(const MyString& content, int pageNumber);
 	void editRate(const MyString& username, int rating); 

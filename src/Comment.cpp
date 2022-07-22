@@ -1,5 +1,4 @@
 #include "Comment.h"
-#include "MyString.h"
 #include <cstring>
 #pragma warning(disable:4996)
 
@@ -31,7 +30,7 @@ void Comment::setContent(const MyString content)
 	this->content = content;
 }
 
-void Comment::saveToFile(std::fstream& file)
+void Comment::saveToFile(std::ofstream& file) const
 {
 	size_t size = username.getSize();
 	file.write((const char*)&size, sizeof(size));
@@ -42,7 +41,7 @@ void Comment::saveToFile(std::fstream& file)
 	file.write((const char*)content.c_str(), content.getSize());
 }
 
-void Comment::readFromFile(std::fstream& file)
+void Comment::readFromFile(std::ifstream& file)
 {
 	size_t size;
 	file.read((char*)&size, sizeof(size));

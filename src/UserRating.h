@@ -12,8 +12,8 @@ public:
 
 	void setRating(size_t rating);
 	
-	void saveToFile(std::fstream& file);
-	void readFromFile(std::fstream& file);
+	void saveToFile(std::ofstream& file) const;
+	void readFromFile(std::ifstream& file);
 	
 	size_t getRating() const;
 	const MyString getUserName() const;

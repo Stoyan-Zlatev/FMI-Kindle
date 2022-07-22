@@ -1,7 +1,5 @@
 #include "Book.h"
-#include "Collection.hpp"
-#include "Page.h"
-#include "UserRating.h"
+#include "Serialize.h"
 #include <iostream>
 #pragma warning(disable:4996)
 
@@ -47,25 +45,13 @@ void Book::setAuthorName(const MyString& authorName)
 	this->authorName = authorName;
 }
 
-void Book::readFromFile(std::fstream& file)
+void Book::readFromFile(std::ifstream& file)
 {
 	//Title load
-	size_t size;
-	file.read((char*)&size, sizeof(size));
-	char* data = new char[size + 1];
-	file.read((char*)data, size);
-	data[size] = '\0';
-	title = MyString(data);
+	readString(file, title);
 
 	//Author name load
-	file.read((char*)&size, sizeof(size));
-	delete[] data;
-	data = new char[size + 1];
-	file.read((char*)data, size);
-	data[size] = '\0';
-	authorName = MyString(data);
-
-	delete[] data;
+	readString(file, authorName);
 
 	//Pages load
 	file.read((char*)&pages.count, sizeof(pages.count));
@@ -89,7 +75,7 @@ void Book::readFromFile(std::fstream& file)
 	}
 }
 
-void Book::saveToFile(std::fstream& file)
+void Book::saveToFile(std::ofstream& file) const
 {
 	//Title saved
 	size_t size = title.getSize();
@@ -128,9 +114,9 @@ void Book::addComment(const MyString& username, const MyString& comment)
 	comments.add(Comment(username, comment));
 }
 
-void Book::addPage(const MyString& content, int pageNumber)
+void Book::addPage(const MyString& content)
 {
-	pages.add(Page(content, pageNumber));
+	pages.add(Page(content));
 }
 
 void Book::editRate(const MyString& username, int rating)
@@ -146,7 +132,7 @@ void Book::editRate(const MyString& username, int rating)
 
 void Book::editPage(const MyString& content, int pageNumber)
 {
-	pages.edit(Page(content, pageNumber), pageNumber);
+	pages.edit(Page(content), pageNumber);
 }
 
 void Book::removeLastPage()

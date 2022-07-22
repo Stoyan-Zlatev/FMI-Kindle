@@ -1,6 +1,4 @@
 #include "User.h"
-#include "Collection.hpp"
-#include "Book.h"
 #include <cstring>
 #pragma warning(disable:4996)
 
@@ -32,7 +30,7 @@ void User::setPassword(const MyString& password)
 	this->password = password;
 }
 
-void User::saveToFile(std::fstream& file)
+void User::saveToFile(std::ofstream& file) const
 {
 	size_t size = name.getSize();
 	file.write((const char*)&size, sizeof(size));
@@ -59,7 +57,7 @@ void User::saveToFile(std::fstream& file)
 	}
 }
 
-void User::readFromFile(std::fstream& file)
+void User::readFromFile(std::ifstream& file)
 {
 	size_t size;
 	file.read((char*)&size, sizeof(size));

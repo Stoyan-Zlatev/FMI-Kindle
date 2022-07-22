@@ -1,9 +1,9 @@
 #include "Kindle.h"
-#include "User.h"
-#include "Book.h"
 #include "Utils.h"
 #include <exception>
 #include <iostream>
+
+const MyString FILENAME = "FMIKindle.dat";
 
 Kindle::Kindle()
 {
@@ -35,7 +35,7 @@ void Kindle::signup(const MyString& username, const MyString& password)
 	isUsed = true;
 }
 
-void Kindle::logout(std::fstream& file)
+void Kindle::logout()
 {
 	if (!isUsed)
 	{
@@ -55,7 +55,7 @@ bool Kindle::exit()
 		return false;
 	}
 
-	std::fstream newFile("FMIKindle.dat", std::ios::trunc | std::ios::binary | std::ios::out);
+	std::ofstream newFile(FILENAME.c_str(), std::ios::binary);
 
 	if (!newFile.is_open())
 	{
@@ -68,7 +68,7 @@ bool Kindle::exit()
 	return true;
 }
 
-void Kindle::load(std::fstream& sourceFile)
+void Kindle::load(std::ifstream& sourceFile)
 {
 	sourceFile.read((char*)&booksToRead.count, sizeof(booksToRead.count));
 	for (size_t i = 0; i < booksToRead.count; i++)
@@ -83,7 +83,7 @@ void Kindle::load(std::fstream& sourceFile)
 	}
 }
 
-void Kindle::saveToFile(std::fstream& file)
+void Kindle::saveToFile(std::ofstream& file) const
 {
 	file.write((const char*)&booksToRead.count, sizeof(booksToRead.count));
 	for (size_t i = 0; i < booksToRead.count; i++)
@@ -166,7 +166,7 @@ void Kindle::addBookPage(const MyString& bookTitle, const MyString& pageContent)
 		throw std::invalid_argument("You can edit only your books!");
 	}
 
-	booksToRead.collection[bookIndex].addPage(pageContent, booksToRead.collection[bookIndex].getPagesCount());
+	booksToRead.collection[bookIndex].addPage(pageContent);
 }
 
 void Kindle::editBookPage(const MyString& bookTitle, int page, const MyString& pageContent)
@@ -271,7 +271,7 @@ bool Kindle::getIsUsed() const
 
 void Kindle::run()
 {
-	std::fstream sourceFile("FMIKindle.dat", std::ios::in | std::ios::binary);
+	std::ifstream sourceFile(FILENAME.c_str(), std::ios::binary);
 
 	if (!sourceFile.is_open())
 	{
@@ -343,7 +343,7 @@ void Kindle::run()
 			}
 			else if (isPrefix(command, "logout"))
 			{
-				fmiKindle.logout(sourceFile);
+				fmiKindle.logout();
 			}
 			else if (isPrefix(command, "view"))
 			{
@@ -370,7 +370,7 @@ void Kindle::run()
 				{
 					std::cout << "Page " << i + 1 << ": ";
 					command.getline(std::cin);
-					currentBook.addPage(std::move(command), i);
+					currentBook.addPage(std::move(command));
 				}
 
 				fmiKindle.addBook(currentBook);

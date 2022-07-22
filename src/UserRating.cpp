@@ -19,7 +19,7 @@ void UserRating::setRating(size_t rating)
 	this->rating = rating;
 }
 
-void UserRating::saveToFile(std::fstream& file)
+void UserRating::saveToFile(std::ofstream& file) const
 {
 	size_t usernameSize = username.getSize();
 	file.write((const char*)&usernameSize, sizeof(usernameSize));
@@ -29,7 +29,7 @@ void UserRating::saveToFile(std::fstream& file)
 	file.write((const char*)&tempRating, sizeof(tempRating));
 }
 
-void UserRating::readFromFile(std::fstream& file)
+void UserRating::readFromFile(std::ifstream& file)
 {
 	size_t usernameSize;
 	file.read((char*)&usernameSize, sizeof(usernameSize));

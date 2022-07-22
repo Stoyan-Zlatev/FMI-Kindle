@@ -1,5 +1,4 @@
 #pragma once
-#include "Book.h"
 #include "Collection.hpp"
 #include "GlobalConstants.h"
 #include "MyString.h"
@@ -18,8 +17,8 @@ public:
 	User();
 	User(const MyString& name, const MyString& password);
 
-	void saveToFile(std::fstream& file);
-	void readFromFile(std::fstream& file);
+	void saveToFile(std::ofstream& file) const;
+	void readFromFile(std::ifstream& file);
 
 	void readBook(const MyString& title);
 	void writeBook(const MyString& title);

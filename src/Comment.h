@@ -13,8 +13,8 @@ public:
 
 	void setContent(const MyString content);
 	
-	void saveToFile(std::fstream& file);
-	void readFromFile(std::fstream& file);
+	void saveToFile(std::ofstream& file) const;
+	void readFromFile(std::ifstream& file);
 
 	const MyString getUserName() const;
 	const MyString getContent() const;

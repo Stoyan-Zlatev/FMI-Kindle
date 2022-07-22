@@ -1,4 +1,5 @@
 #pragma once
+#include <iostream>
 #include "GlobalConstants.h"
 
 template <typename T>
